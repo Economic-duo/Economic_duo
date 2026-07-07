@@ -4,97 +4,328 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Квиз | Банк России</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --font-family: "Roboto", sans-serif;
+      --second-family: "Amatic SC", sans-serif;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: "Roboto", Arial, sans-serif;
-      background: #f0f4f8;
+      font-family: var(--font-family);
+      background: #c8d8ec;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
     }
-    .container {
-      max-width: 860px;
-      width: 100%;
+
+    .phone-frame {
+      width: 402px;
+      height: 874px;
+      border-radius: 20px;
       background: #fff;
-      border-radius: 32px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
       overflow: hidden;
+      position: relative;
+      box-shadow: 0 16px 40px rgba(25, 31, 105, 0.15);
     }
-    .header { background: #003b6f; padding: 24px 28px; color: #fff; }
-    .header h1 { font-weight: 500; font-size: 1.8rem; }
-    .header p { opacity: 0.88; margin-top: 8px; }
 
-    .content { padding: 32px 28px; }
+    .app-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 60% at 50% 0%, rgba(255, 255, 255, 0.95) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(200, 210, 245, 0.6) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 45% at 80% 60%, rgba(180, 195, 240, 0.5) 0%, transparent 55%),
+        linear-gradient(180deg, #b8c9e8 0%, #d4daf5 35%, #e8e4f8 65%, #f0eef8 100%);
+      z-index: 0;
+    }
 
-    .settings-group { margin-bottom: 28px; }
-    .settings-label {
+    .screen {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 24px 40px;
+    }
+
+    .app-title {
+      font-family: var(--second-family);
+      font-weight: 700;
+      font-size: 75px;
+      line-height: 93%;
+      letter-spacing: -0.04em;
+      text-align: center;
+      color: #191f69;
+      margin-top: 40px;
+    }
+
+    .screen-home {
+      justify-content: center;
+      gap: 80px;
+    }
+
+    .screen-home .app-title {
+      margin-top: 0;
+    }
+
+    .btn-start {
+      font-family: var(--font-family);
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 63%;
+      letter-spacing: -0.04em;
+      text-align: center;
+      color: #9aa0f8;
+      background: #fff;
+      border: none;
+      border-radius: 10px;
+      width: 263px;
+      height: 52px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(25, 31, 105, 0.08);
+      transition: 0.2s;
+    }
+    .btn-start:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(25, 31, 105, 0.12); }
+
+    .screen-welcome, .screen-register {
+      padding-top: 48px;
+    }
+
+    .screen-welcome .app-title,
+    .screen-register .app-title {
+      font-size: 58px;
+      margin-top: 0;
+      margin-bottom: 48px;
+    }
+
+    .register-heading {
+      font-family: var(--font-family);
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 100%;
+      letter-spacing: -0.04em;
+      color: #9aa0f8;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .auth-form input[type="text"],
+    .auth-form input[type="password"] {
+      width: 263px;
+      height: 52px;
+      border: 1px solid #99a0f9;
+      border-radius: 10px;
+      padding: 0 16px;
+      font-family: var(--font-family);
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.85);
+      outline: none;
+    }
+    .auth-form input:focus { border-color: #191f69; }
+
+    .btn-login {
+      width: 263px;
+      height: 52px;
+      border-radius: 10px;
+      border: none;
+      background: #191f69;
+      color: #fff;
+      font-family: var(--font-family);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+    .btn-login:hover { background: #121852; transform: translateY(-1px); }
+
+    .register-link {
+      width: 237px;
+      text-align: center;
+      font-family: var(--font-family);
+      font-size: 12px;
+      color: #191f69;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .register-link a {
+      color: #9aa0f8;
       font-weight: 600;
-      color: #003b6f;
-      margin-bottom: 12px;
-      border-left: 4px solid #003b6f;
-      padding-left: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .register-link a:hover { text-decoration: underline; }
+
+    .back-to-login {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #9aa0f8;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      text-decoration: underline;
+    }
+
+    .screen .error-message,
+    .screen .success-message {
+      width: 263px;
+      margin-top: 12px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .container .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 24px 32px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .app-header {
+      flex-shrink: 0;
+      padding: 36px 24px 16px;
+      text-align: center;
+    }
+    .app-header-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-height: 36px;
+      margin-bottom: 4px;
+      width: 100%;
+    }
+    .app-title-compact {
+      font-family: var(--second-family);
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 93%;
+      letter-spacing: -0.04em;
+      text-align: center;
+      color: #191f69;
+      margin: 0;
+    }
+    .app-subtitle {
+      font-family: var(--font-family);
+      font-size: 14px;
+      font-weight: 500;
+      color: #9aa0f8;
+      margin-top: 8px;
+    }
+
+    .page-heading {
+      font-family: var(--font-family);
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 100%;
+      letter-spacing: -0.04em;
+      color: #9aa0f8;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .settings-group { margin-bottom: 22px; }
+    .settings-label {
+      font-weight: 700;
+      font-size: 14px;
+      color: #191f69;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      border-left: 3px solid #9aa0f8;
     }
 
     .radio-group, .select-group {
       display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      margin-top: 8px;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
     }
 
     .radio-group label, .select-group select {
-      background: #f8fafc;
-      padding: 10px 18px;
-      border-radius: 48px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 12px 16px;
+      border-radius: 10px;
       font-weight: 500;
-      border: 1px solid #cfdee9;
+      font-size: 14px;
+      border: 1px solid #99a0f9;
       cursor: pointer;
       transition: 0.2s;
       font-family: inherit;
-      font-size: 1rem;
+      color: #191f69;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .select-group select {
       appearance: none;
       -webkit-appearance: none;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23003B6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+      width: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23191f69" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
       background-repeat: no-repeat;
-      background-position: right 18px center;
+      background-position: right 16px center;
       padding-right: 42px;
     }
 
-    .radio-group label:hover, .select-group select:hover { background: #e6edf4; }
-
-    .btn {
-      background: #003b6f;
-      color: #fff;
-      border: none;
-      padding: 14px 28px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 48px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 20px;
-      transition: 0.2s;
+    .radio-group label:hover, .select-group select:hover { background: rgba(255, 255, 255, 0.95); }
+    .radio-group label:has(input:checked) {
+      border-color: #191f69;
+      background: rgba(255, 255, 255, 0.95);
     }
-    .btn:hover { background: #002a50; transform: translateY(-1px); }
-    .btn-secondary { background: #eef2f7; color: #003b6f; border: 1px solid #cbdde9; }
-    .btn-secondary:hover { background: #e2e8f0; }
 
-    .error-message {
-      background: #ffe6e5;
-      color: #b00020;
-      padding: 12px;
-      border-radius: 20px;
-      margin-top: 18px;
-      text-align: center;
-      display: none;
-    }
+.btn {
+  background: #191f69;
+  color: #fff;
+  border: none;
+  padding: 0 20px;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-family);
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 16px;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.btn:hover { background: #121852; transform: translateY(-1px); }
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.85);
+  color: #9aa0f8;
+  border: 1px solid #99a0f9;
+  font-weight: 700;
+  /* можно унаследовать display: flex и т.д., но лучше продублировать */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
     .success-message {
       background: #e0f7e8;
       color: #0b5e2e;
@@ -109,78 +340,95 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 28px;
-      border-bottom: 1px solid #e2edf2;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(153, 160, 249, 0.4);
       padding-bottom: 12px;
     }
     .question-counter {
-      background: #eef3fc;
+      background: rgba(255, 255, 255, 0.85);
       padding: 0 14px;
-      border-radius: 40px;
-      color: #003b6f;
+      border-radius: 10px;
+      border: 1px solid #99a0f9;
+      color: #191f69;
       font-weight: 600;
-      height: 40px;
+      font-size: 13px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       line-height: 1;
     }
     .timer {
-      font-size: 2rem;
+      font-size: 1.4rem;
       font-weight: 700;
-      font-family: monospace;
-      background: #f0f4fa;
-      padding: 6px 18px;
-      border-radius: 60px;
+      font-family: var(--font-family);
+      color: #191f69;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #99a0f9;
+      padding: 4px 14px;
+      border-radius: 10px;
     }
-    .timer.warning { color: #dc2626; background: #ffe8e8; }
+    .timer.warning { color: #dc2626; background: #ffe8e8; border-color: #fca5a5; }
 
     .question-text {
-      font-size: 1.35rem;
+      font-size: 1.1rem;
       font-weight: 500;
-      margin: 20px 0 24px;
-      color: #0a2a44;
-      line-height: 1.4;
+      margin: 16px 0 20px;
+      color: #191f69;
+      line-height: 1.45;
     }
     .option-item {
-      margin-bottom: 14px;
-      background: #f9fbfd;
-      padding: 12px 18px;
-      border-radius: 24px;
-      border: 1px solid #e2edf2;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #99a0f9;
+      color: #191f69;
+      font-size: 14px;
     }
     .option-item label { margin-left: 10px; cursor: pointer; }
 
-    input[type="text"], input[type="password"] {
+    .content input[type="text"],
+    .content input[type="password"] {
       width: 100%;
-      padding: 14px 18px;
-      border-radius: 48px;
-      border: 1px solid #cfdee9;
-      font-size: 1rem;
+      height: 52px;
+      padding: 0 16px;
+      border-radius: 10px;
+      border: 1px solid #99a0f9;
+      font-size: 16px;
       font-family: inherit;
+      background: rgba(255, 255, 255, 0.85);
       outline: none;
+      color: #191f69;
     }
-    input[type="text"]:focus, input[type="password"]:focus { border-color: #8ab0d1; }
+    .content input[type="text"]:focus,
+    .content input[type="password"]:focus { border-color: #191f69; }
 
     .feedback {
-      margin: 18px 0 20px;
-      padding: 14px 18px;
-      border-radius: 20px;
+      margin: 16px 0 18px;
+      padding: 14px 16px;
+      border-radius: 10px;
       font-weight: 500;
-      background: #f2f6f9;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.85);
       line-height: 1.45;
+      color: #191f69;
     }
-    .feedback.correct { background: #e0f7e8; color: #0b5e2e; border-left: 6px solid #2b8c4a; }
-    .feedback.wrong { background: #ffeceb; color: #b91c1c; border-left: 6px solid #dc2626; }
+    .feedback.correct { background: #e0f7e8; color: #0b5e2e; border-left: 4px solid #2b8c4a; }
+    .feedback.wrong { background: #ffeceb; color: #b91c1c; border-left: 4px solid #dc2626; }
 
     .result-stats {
-      background: #f2f6fc;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #99a0f9;
       padding: 20px;
-      border-radius: 32px;
+      border-radius: 10px;
       text-align: center;
-      margin: 20px 0;
+      margin: 16px 0;
+      color: #191f69;
+      font-size: 14px;
+      line-height: 1.6;
     }
-    .stat-number { font-size: 2.5rem; font-weight: 700; color: #003b6f; }
+    .stat-number { font-size: 2.2rem; font-weight: 700; color: #9aa0f8; }
 
     .auth-card {
       background: #f8fafc;
@@ -202,29 +450,44 @@
     }
 
     .history-card {
-      background: #f9fbfd;
-      border: 1px solid #dce8f2;
-      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #99a0f9;
+      border-radius: 10px;
       padding: 14px;
       margin-bottom: 10px;
       line-height: 1.45;
+      color: #191f69;
+      font-size: 14px;
     }
 
     @media (max-width: 650px) {
+      body { padding: 0; align-items: stretch; }
+      .phone-frame {
+        width: 100%;
+        max-width: 402px;
+        height: 100vh;
+        max-height: 874px;
+        border-radius: 0;
+      }
       .question-text { font-size: 1.15rem; }
       .timer { font-size: 1.45rem; }
       .question-counter { height: 36px; font-size: 0.9rem; }
       .auth-actions { flex-direction: column; }
+      .screen-welcome .app-title,
+      .screen-register .app-title { font-size: 48px; }
+      .app-title { font-size: 60px; }
     }
    
     #quizScreen, #quizScreen * {
   caret-color: transparent;
 }
 #quizScreen #openInput {
-  caret-color: auto; // вернуть каретку только в поле ответа
+  caret-color: auto; /* вернуть каретку только в поле ответа */
 }
 
     
+    #homeScreen, #homeScreen *,
+    #registerScreen, #registerScreen *,
     #startScreen, #startScreen *,
 #quizScreen, #quizScreen *,
 #resultsScreen, #resultsScreen *,
@@ -232,25 +495,27 @@
   caret-color: transparent;
 }
 #authScreen input,
+#registerScreen input,
 #quizScreen #openInput {
   caret-color: auto;
 }
 
     .back-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 40px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #99a0f9;
+      color: #191f69;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-family);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .back-btn:hover {
+      background: #fff;
+      transform: translateY(-1px);
+    }
  /* Подсветка правильного ответa */
 .option-item.correct-highlight {
   background-color: #d4edda !important;
@@ -264,39 +529,56 @@
   </style>
 </head>
 <body>
-  <div class="container">
-  <div class="header">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <div>
-      <h1>Банк России</h1>
-      <p>Экономический дуолинго</p>
+  <div class="phone-frame">
+    <div class="app-bg"></div>
+
+    <div id="homeScreen" class="screen screen-home">
+      <h1 class="app-title">ЭКОНОМИЧЕСКИЙ<br>ДУАЛИНГО</h1>
+      <button class="btn-start" id="homeStartBtn">Начать</button>
     </div>
-    <button id="backToSettingsBtn" class="back-btn" style="display: none;">Назад</button>
-  </div>
-</div>
+
+    <div id="authScreen" class="screen screen-welcome" style="display:none;">
+      <h1 class="app-title">ЭКОНОМИЧЕСКИЙ<br>ДУАЛИНГО</h1>
+      <div class="auth-form">
+        <input type="text" id="authLogin" placeholder="Логин" autocomplete="off" />
+        <input type="password" id="authPassword" placeholder="Пароль" />
+        <button class="btn-login" id="loginBtn">Войти</button>
+        <p class="register-link">Нет аккаунта? <a href="#" id="goToRegisterLink">Зарегистрируйтесь</a></p>
+      </div>
+      <div id="authErrorMsg" class="error-message"></div>
+      <div id="authSuccessMsg" class="success-message"></div>
+    </div>
+
+    <div id="registerScreen" class="screen screen-register" style="display:none;">
+      <h1 class="app-title">ЭКОНОМИЧЕСКИЙ<br>ДУАЛИНГО</h1>
+      <h2 class="register-heading">Создать аккаунт</h2>
+      <div class="auth-form">
+        <input type="text" id="registerLogin" placeholder="Логин" autocomplete="off" />
+        <input type="password" id="registerPassword" placeholder="Пароль" />
+        <button class="btn-login" id="registerSubmitBtn">Зарегистрироваться</button>
+        <button type="button" class="back-to-login" id="backToLoginBtn">Вернуться ко входу</button>
+      </div>
+      <div id="registerErrorMsg" class="error-message"></div>
+      <div id="registerSuccessMsg" class="success-message"></div>
+    </div>
+
+    <div id="appScreens" class="container" style="display:none;">
+      
 
     <div class="content">
-      <div id="authScreen">
-        <h3>Вход в систему</h3>
-        <p class="muted">Введите логин и пароль. Если Вы новый пользователь, нажмите «Регистрация», после ответа системы «Регистрация успешна» нажмите «Войти». Если Вы уже зарегистрированный пользователь - нажмите «Войти».</p>
-
-        <div class="auth-card">
-          <input type="text" id="authLogin" placeholder="Логин" autocomplete="off" />
-          <input type="password" id="authPassword" placeholder="Пароль" style="margin-top:10px;" />
-          <div class="auth-actions">
-            <button class="btn" id="loginBtn">Войти</button>
-            <button class="btn btn-secondary" id="registerBtn">Регистрация</button>
-          </div>
-          <div id="authErrorMsg" class="error-message"></div>
-          <div id="authSuccessMsg" class="success-message"></div>
+<div class="app-header">
+        <div class="app-header-row">
+          <button id="backToSettingsBtn" class="back-btn" style="display: none;">Назад</button>
         </div>
-      </div>
-
+        <h1 class="app-title-compact">ЭКОНОМИЧЕСКИЙ<br>ДУАЛИНГО</h1>
+        <p class="app-subtitle" id="appUserGreeting"></p>
+</div>
       <div id="startScreen" style="display:none;">
+        <h2 class="page-heading">Настройки квиза</h2>
         <div class="settings-group">
           <div class="settings-label">Тема</div>
           <div class="radio-group">
-            <label><input type="radio" name="theme" value="Операционные процедуры Банка России" /> Операционная процедура</label>
+            <label><input type="radio" name="theme" value="Операционные процедуры Банка России" /> Операционные процедуры</label>
             <label><input type="radio" name="theme" value="Макропруденциальная политика Банка России" checked /> Макропруденциальная политика</label>
             <label><input type="radio" name="theme" value="Переход к инфляционному таргетированию" /> Переход к таргетированию инфляции</label>
             <label><input type="radio" name="theme" value="mix" /> Микс тем</label>
@@ -337,11 +619,11 @@
         <div id="optionsContainer"></div>
         <div id="feedbackBlock" class="feedback" style="display:none;"></div>
         <button class="btn" id="submitAnswerBtn">Ответить</button>
-        <button class="btn btn-secondary" id="nextQuestionBtn" style="display:none;">➡ Перейти к следующему</button>
+        <button class="btn btn-secondary" id="nextQuestionBtn" style="display:none;">➡ Перейти к следующему вопросу/button>
       </div>
 
       <div id="resultsScreen" style="display:none;">
-        <h3>Результаты квиза</h3>
+        <h2 class="page-heading">Результаты квиза</h2>
         <div class="result-stats">
           <div><span class="stat-number" id="correctCount">0</span> / <span id="totalQuestionsStat">0</span></div>
           <div>Процент верных: <strong id="percentageStat">0%</strong></div>
@@ -351,15 +633,16 @@
 
         <div id="resultSaveError" class="error-message"></div>
 
-        <button class="btn" id="restartQuizBtn">Пройти еще раз</button>
+        <button class="btn" id="restartQuizBtn">Пройти ещё раз</button>
         <button class="btn btn-secondary" id="historyBtn" style="margin-top:10px;">История результатов</button>
       </div>
 
       <div id="historyScreen" style="display:none;">
-        <h3>История результатов</h3>
+        <h2 class="page-heading">История результатов</h2>
         <div id="historyList" style="margin-top:14px;"></div>
         <button class="btn btn-secondary" id="backToResultsBtn">Назад</button>
       </div>
+    </div>
     </div>
   </div>
 
@@ -2890,12 +3173,14 @@
     let savingInProgress = false;
     let historyFrom = "results";
 
-    let authScreen, startScreen, quizScreen, resultsScreen, historyScreen;
-    let authLogin, authPassword, loginBtn, registerBtn, authErrorMsg, authSuccessMsg;
+    let homeScreen, authScreen, registerScreen, appScreens, startScreen, quizScreen, resultsScreen, historyScreen;
+    let authLogin, authPassword, registerLogin, registerPassword, loginBtn, registerSubmitBtn;
+    let goToRegisterLink, backToLoginBtn, homeStartBtn;
+    let authErrorMsg, authSuccessMsg, registerErrorMsg, registerSuccessMsg;
     let startErrorMsg, startBtn, submitBtn, nextBtn, restartBtn, historyBtn, historyStartBtn, backToResultsBtn;
     let questionCounterSpan, timerDisplay, questionTextDiv, optionsContainer, feedbackBlock;
     let correctCountSpan, totalQuestionsStatSpan, percentageStatSpan, totalTimeSecSpan, resultUserName;
-    let resultSaveError, historyList;
+    let resultSaveError, historyList, appUserGreeting;
 
     function escapeHtml(str) {
       return String(str || "")
@@ -2910,7 +3195,7 @@
       return String(str || "")
         .trim()
         .toLowerCase()
-        .replace(/е/g, "е")
+        .replace(/ё/g, "е")
         .replace(/\s+/g, " ");
     }
 
@@ -2946,18 +3231,59 @@
       }
     }
 
+    function hideAllTopScreens() {
+      homeScreen.style.display = "none";
+      authScreen.style.display = "none";
+      registerScreen.style.display = "none";
+    }
+
+    function showHomeScreen() {
+      hideAllTopScreens();
+      appScreens.style.display = "none";
+      homeScreen.style.display = "flex";
+    }
+
+    function showAuthScreen() {
+      hideAllTopScreens();
+      appScreens.style.display = "none";
+      authScreen.style.display = "flex";
+    }
+
+    function showRegisterScreen() {
+      hideAllTopScreens();
+      appScreens.style.display = "none";
+      registerScreen.style.display = "flex";
+    }
+
+    function showAppScreen(innerScreen) {
+      hideAllTopScreens();
+      appScreens.style.display = "flex";
+      startScreen.style.display = "none";
+      quizScreen.style.display = "none";
+      resultsScreen.style.display = "none";
+      historyScreen.style.display = "none";
+      if (innerScreen) innerScreen.style.display = "block";
+    }
+
     async function registerUser() {
-      hideMsg(authErrorMsg);
-      hideMsg(authSuccessMsg);
+      hideMsg(registerErrorMsg);
+      hideMsg(registerSuccessMsg);
 
-      const username = authLogin.value.trim();
-      const password = authPassword.value.trim();
+      const username = registerLogin.value.trim();
+      const password = registerPassword.value.trim();
 
-      if (!username || !password) return showError(authErrorMsg, "Введите логин и пароль.");
+      if (!username || !password) return showError(registerErrorMsg, "Введите логин и пароль.");
 
       const res = await callAppsScript("registerUser", { username, password });
-      if (res && res.success) showSuccess(authSuccessMsg, "Регистрация успешна. Теперь нажмите «Войти».");
-      else showError(authErrorMsg, (res && res.error) ? res.error : "Ошибка регистрации.");
+      if (res && res.success) {
+        authLogin.value = username;
+        authPassword.value = "";
+        showAuthScreen();
+        hideMsg(authErrorMsg);
+        showSuccess(authSuccessMsg, "Регистрация успешна.");
+      } else {
+        showError(registerErrorMsg, (res && res.error) ? res.error : "Ошибка регистрации.");
+      }
     }
 
     async function loginUser() {
@@ -2972,8 +3298,8 @@
       const res = await callAppsScript("loginUser", { username, password });
       if (res && res.success) {
         currentUser = res.username || username;
-        authScreen.style.display = "none";
-        startScreen.style.display = "block";
+        if (appUserGreeting) appUserGreeting.textContent = "Пользователь: " + currentUser;
+        showAppScreen(startScreen);
       } else {
         showError(authErrorMsg, (res && res.error) ? res.error : "Неверный логин или пароль.");
       }
@@ -3033,7 +3359,7 @@ function recordAnswer(isCorrect, userRaw, correctDisplay) {
 
   submitBtn.style.display = "none";
   nextBtn.style.display = "flex";
-  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить квиз" : "➡ Перейти к следующему";
+  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить квиз" : "➡ Перейти к следующему вопросу";
 }
 
 function highlightAnswers(question, userRaw, isUserCorrect) {
@@ -3064,7 +3390,7 @@ function highlightAnswers(question, userRaw, isUserCorrect) {
     selectedIndices = Array.from(selectedBoxes).map(cb => parseInt(cb.value));
   }
 
-  // Подсвечиваем правильные варианты зеленым
+  // Подсвечиваем правильные варианты зелёным
   correctIndices.forEach(idx => {
     const optionDiv = document.querySelectorAll('.option-item')[idx];
     if (optionDiv) optionDiv.classList.add('correct-highlight');
@@ -3073,7 +3399,7 @@ function highlightAnswers(question, userRaw, isUserCorrect) {
   // Если пользователь ошибся (неправильный ответ), подсвечиваем его выбранные варианты красным
   if (!isUserCorrect) {
     selectedIndices.forEach(idx => {
-      // Не перекрываем зеленый (правильные варианты останутся зелеными)
+      // Не перекрываем зелёный (правильные варианты останутся зелёными)
       if (!correctIndices.includes(idx)) {
         const optionDiv = document.querySelectorAll('.option-item')[idx];
         if (optionDiv) optionDiv.classList.add('wrong-highlight');
@@ -3104,7 +3430,7 @@ function handleTimeout() {
   
   submitBtn.style.display = "none";
   nextBtn.style.display = "flex";
-  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить квиз" : "➡ Перейти к следующему";
+  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить квиз" : "➡ Перейти к следующему вопросу";
   clearAuto();
   autoTransitionTimeout = setTimeout(() => goToNext(), 60000);
 }
@@ -3225,6 +3551,7 @@ function handleTimeout() {
       quizScreen.style.display = "none";
       resultsScreen.style.display = "block";
       historyScreen.style.display = "none";
+      appScreens.style.display = "flex";
       backToSettingsBtn.style.display = 'none';
       
       const finalData = {
@@ -3309,6 +3636,7 @@ function handleTimeout() {
       quizScreen.style.display = "block";
       resultsScreen.style.display = "none";
       historyScreen.style.display = "none";
+      appScreens.style.display = "flex";
 
       renderCurrentQuestion();
       backToSettingsBtn.style.display = 'block';
@@ -3323,6 +3651,7 @@ function handleTimeout() {
       quizScreen.style.display = "none";
       resultsScreen.style.display = "none";
       historyScreen.style.display = "none";
+      appScreens.style.display = "flex";
 
       hideMsg(startErrorMsg);
       hideMsg(resultSaveError);
@@ -3331,7 +3660,7 @@ function handleTimeout() {
 
     function renderHistory(items) {
       if (!items.length) {
-        historyList.innerHTML = `<div class="history-card">У вас пока нет сохраненных результатов.</div>`;
+        historyList.innerHTML = `<div class="history-card">У вас пока нет сохранённых результатов.</div>`;
         return;
       }
 
@@ -3352,11 +3681,7 @@ function handleTimeout() {
       const res = await callAppsScript("getUserHistory", { username: currentUser });
       if (res && res.success) {
         renderHistory(res.history || []);
-        authScreen.style.display = "none";
-        startScreen.style.display = "none";
-        quizScreen.style.display = "none";
-        resultsScreen.style.display = "none";
-        historyScreen.style.display = "block";
+        showAppScreen(historyScreen);
       } else {
         alert((res && res.error) ? res.error : "Не удалось загрузить историю.");
       }
@@ -3364,7 +3689,10 @@ function handleTimeout() {
     }
 
     function init() {
+      homeScreen = document.getElementById("homeScreen");
       authScreen = document.getElementById("authScreen");
+      registerScreen = document.getElementById("registerScreen");
+      appScreens = document.getElementById("appScreens");
       startScreen = document.getElementById("startScreen");
       quizScreen = document.getElementById("quizScreen");
       resultsScreen = document.getElementById("resultsScreen");
@@ -3372,10 +3700,17 @@ function handleTimeout() {
 
       authLogin = document.getElementById("authLogin");
       authPassword = document.getElementById("authPassword");
+      registerLogin = document.getElementById("registerLogin");
+      registerPassword = document.getElementById("registerPassword");
       loginBtn = document.getElementById("loginBtn");
-      registerBtn = document.getElementById("registerBtn");
+      registerSubmitBtn = document.getElementById("registerSubmitBtn");
+      goToRegisterLink = document.getElementById("goToRegisterLink");
+      backToLoginBtn = document.getElementById("backToLoginBtn");
+      homeStartBtn = document.getElementById("homeStartBtn");
       authErrorMsg = document.getElementById("authErrorMsg");
       authSuccessMsg = document.getElementById("authSuccessMsg");
+      registerErrorMsg = document.getElementById("registerErrorMsg");
+      registerSuccessMsg = document.getElementById("registerSuccessMsg");
 
       startErrorMsg = document.getElementById("startErrorMsg");
       startBtn = document.getElementById("startQuizBtn");
@@ -3400,10 +3735,24 @@ function handleTimeout() {
 
       resultSaveError = document.getElementById("resultSaveError");
       historyList = document.getElementById("historyList");
+      appUserGreeting = document.getElementById("appUserGreeting");
 
+      homeStartBtn.addEventListener("click", showAuthScreen);
       loginBtn.addEventListener("click", loginUser);
-      registerBtn.addEventListener("click", registerUser);
+      registerSubmitBtn.addEventListener("click", registerUser);
+      goToRegisterLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        hideMsg(authErrorMsg);
+        hideMsg(authSuccessMsg);
+        showRegisterScreen();
+      });
+      backToLoginBtn.addEventListener("click", () => {
+        hideMsg(registerErrorMsg);
+        hideMsg(registerSuccessMsg);
+        showAuthScreen();
+      });
       authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") loginUser(); });
+      registerPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") registerUser(); });
 
       startBtn.addEventListener("click", startQuiz);
       submitBtn.addEventListener("click", checkAnswer);
@@ -3422,6 +3771,7 @@ function handleTimeout() {
 
       backToResultsBtn.addEventListener("click", () => {
         historyScreen.style.display = "none";
+        appScreens.style.display = "flex";
         if (historyFrom === "start") startScreen.style.display = "block";
         else resultsScreen.style.display = "block";
       });
@@ -3439,6 +3789,7 @@ function backToStartScreen() {
   // Скрываем экран квиза и показываем стартовый
   quizScreen.style.display = 'none';
   startScreen.style.display = 'block';
+  appScreens.style.display = 'flex';
   
   // Очищаем текущие данные квиза (по желанию)
   currentQuizQuestions = [];

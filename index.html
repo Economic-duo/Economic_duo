@@ -4363,26 +4363,30 @@
       if (innerScreen) innerScreen.style.display = "block";
     }
 
-    async function registerUser() {
-      hideMsg(registerErrorMsg);
-      hideMsg(registerSuccessMsg);
+  async function registerUser() {
+  hideMsg(registerErrorMsg);
+  hideMsg(registerSuccessMsg);
 
-      const username = registerLogin.value.trim();
-      const password = registerPassword.value.trim();
+  const username = registerLogin.value.trim();
+  const password = registerPassword.value.trim();
 
-      if (!username || !password) return showError(registerErrorMsg, "Введите логин и пароль.");
+  if (!username || !password) return showError(registerErrorMsg, "Введите логин и пароль.");
 
-      const res = await callAppsScript("registerUser", { username, password });
-      if (res && res.success) {
-        authLogin.value = username;
-        authPassword.value = "";
-        showAuthScreen();
-        hideMsg(authErrorMsg);
-        showSuccess(authSuccessMsg, "Регистрация успешна.");
-      } else {
-        showError(registerErrorMsg, (res && res.error) ? res.error : "Ошибка регистрации.");
-      }
-    }
+  const res = await callAppsScript("registerUser", { username, password });
+  if (res && res.success) {
+    currentUser = res.username || username;
+    if (appUserGreeting) appUserGreeting.textContent = "Пользователь: " + currentUser;
+
+    registerLogin.value = "";
+    registerPassword.value = "";
+    hideMsg(registerErrorMsg);
+    hideMsg(registerSuccessMsg);
+
+    showAppScreen(startScreen);
+  } else {
+    showError(registerErrorMsg, (res && res.error) ? res.error : "Ошибка регистрации.");
+  }
+}
 
     async function loginUser() {
       hideMsg(authErrorMsg);

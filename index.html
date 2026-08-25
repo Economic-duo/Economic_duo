@@ -428,6 +428,44 @@
       font-size: 14px;
       line-height: 1.6;
     }
+	  .extra-stats {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+}
+.extra-stat-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #99a0f9;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  color: #191f69;
+}
+.extra-stat-label {
+  font-size: 13px;
+}
+.extra-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #9aa0f8;
+}
+.extra-stat-suffix {
+  font-size: 12px;
+}
+
+.sparkline-block {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #99a0f9;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.sparkline-title {
+  font-size: 13px;
+  color: #191f69;
+  margin-bottom: 8px;
+}
     .stat-number { font-size: 2.2rem; font-weight: 700; color: #9aa0f8; }
 
     .auth-card {
@@ -632,6 +670,22 @@
           <div>⏱ Общее время: <strong id="totalTimeSec">0</strong> секунд</div>
           <div style="margin-top:8px;">Пользователь: <strong id="resultUserName">—</strong></div>
         </div>
+		  <div id="resultsExtraStats" class="extra-stats">
+  <div class="extra-stat-card">
+    <div class="extra-stat-label">Streak</div>
+    <div class="extra-stat-value" id="streakValue">—</div>
+    <div class="extra-stat-suffix">дней</div>
+  </div>
+  <div class="extra-stat-card">
+    <div class="extra-stat-label">Рекорд по теме</div>
+    <div class="extra-stat-value" id="topicRecordValue">—</div>
+  </div>
+</div>
+
+<div class="sparkline-block">
+  <div class="sparkline-title">Последние попытки по теме, % верных</div>
+  <svg id="sparklineChart" width="100%" height="70" viewBox="0 0 300 70" preserveAspectRatio="none"></svg>
+</div>
 
         <div id="resultSaveError" class="error-message"></div>
 
@@ -4634,8 +4688,62 @@ function handleTimeout() {
       const withShuffledOptions = selected.map(shuffleQuestionOptions);
       return { success: true, questions: shuffleArray(withShuffledOptions) };
     }
+	  function calcStreak(history) {
+  if (!history.length) return 0;
+  const days = new Set(history.map(h => new Date(h.date).toDateString()));
+  let streak = 0;
+  let cursor = new Date();
+  while (days.has(cursor.toDateString())) {
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}
 
+function calcTopicRecord(history, theme) {
+  const topicHistory = history.filter(h => h.theme === theme);
+  if (!topicHistory.length) return null;
+  return Math.max(...topicHistory.map(h => h.percent));
+}
+
+function getLastAttemptsByTopic(history, theme, count) {
+  return history
+    .filter(h => h.theme === theme)
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(-count);
+}
+
+function renderSparkline(attempts) {
+  const svg = document.getElementById("sparklineChart");
+  if (!attempts.length) { svg.innerHTML = ""; return; }
+  const width = 300, height = 70, padding = 8;
+  const values = attempts.map(a => a.percent);
+  const step = attempts.length > 1 ? (width - padding * 2) / (attempts.length - 1) : 0;
+  const points = values.map((v, i) => {
+    const x = padding + i * step;
+    const y = height - padding - (v / 100) * (height - padding * 2);
+    return `${x},${y}`;
+  });
+  const circles = points.map(p => {
+    const [x, y] = p.split(",");
+    return `<circle cx="${x}" cy="${y}" r="3" fill="#7F77DD" />`;
+  }).join("");
+  svg.innerHTML = `<polyline points="${points.join(" ")}" fill="none" stroke="#9aa0f8" stroke-width="2" /> ${circles}`;
+}
+
+async function loadResultsExtras(theme) {
+  document.getElementById("streakValue").textContent = "…";
+  document.getElementById("topicRecordValue").textContent = "…";
+  const res = await callAppsScript("getUserHistory", { username: currentUser });
+  if (!res || !res.success) return;
+  const history = res.history || [];
+  document.getElementById("streakValue").textContent = String(calcStreak(history));
+  const record = calcTopicRecord(history, theme);
+  document.getElementById("topicRecordValue").textContent = record !== null ? `${record}%` : "—";
+  renderSparkline(getLastAttemptsByTopic(history, theme, 5));
+}
     function finishQuiz() {
+		
       stopTimer();
       clearAuto();
 
@@ -4672,6 +4780,7 @@ function handleTimeout() {
       };
 
       saveResultAuto(finalData);
+	  loadResultsExtras(finalData.settings.theme);
     }
 
     function renderCurrentQuestion() {

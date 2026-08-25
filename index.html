@@ -245,6 +245,15 @@
       margin-bottom: 20px;
       text-align: center;
     }
+	  .results-topic {
+  text-align: center;
+  font-size: 15px;
+  color: #191f69;
+  margin-bottom: 16px;
+}
+.results-topic strong {
+  font-weight: 700;
+}
 
     .settings-group { margin-bottom: 22px; }
     .settings-label {
@@ -4758,6 +4767,7 @@ async function loadResultsExtras(theme) {
       percentageStatSpan.textContent = `${percent}%`;
       totalTimeSecSpan.textContent = String(totalSeconds);
       resultUserName.textContent = currentUser || "Гость";
+	  document.getElementById("resultTopicName").innerHTML = `Тема: <strong>${document.querySelector('input[name="theme"]:checked').value === "mix" ? "Микс тем" : document.querySelector('input[name="theme"]:checked').value}</strong>`;
 
       quizScreen.style.display = "none";
       resultsScreen.style.display = "block";

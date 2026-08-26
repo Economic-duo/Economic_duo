@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Квиз | Банк России</title>
+  <title> Банк России</title>
   <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -626,7 +626,7 @@
         <p class="app-subtitle" id="appUserGreeting"></p>
 </div>
       <div id="startScreen" style="display:none;">
-        <h2 class="page-heading">Настройки квиза</h2>
+        <h2 class="page-heading">Настройки</h2>
         <div class="settings-group">
           <div class="settings-label">Тема</div>
           <div class="radio-group">
@@ -659,7 +659,7 @@
           </div>
         </div>
 
-        <button class="btn" id="startQuizBtn">▶ Начать квиз</button>
+        <button class="btn" id="startQuizBtn">▶ Начать</button>
         <button class="btn btn-secondary" id="historyStartBtn" style="margin-top:10px;">История результатов</button>
         <div id="startErrorMsg" class="error-message"></div>
       </div>
@@ -677,7 +677,7 @@
       </div>
 
       <div id="resultsScreen" style="display:none;">
-        <h2 class="page-heading">Результаты квиза</h2>
+        <h2 class="page-heading">Результаты</h2>
 		  <p class="results-topic" id="resultTopicName">Тема: —</p>
                 <div class="result-stats">
           <div><span class="stat-number" id="correctCount">0</span> / <span id="totalQuestionsStat">0</span></div>
@@ -4528,7 +4528,7 @@ function recordAnswer(isCorrect, userRaw, correctDisplay) {
 
   submitBtn.style.display = "none";
   nextBtn.style.display = "flex";
-  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить квиз" : "➡ Перейти к следующему вопросу";
+  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить" : "➡ Перейти к следующему вопросу";
 }
 
 function highlightAnswers(question, userRaw, isUserCorrect) {
@@ -4599,7 +4599,7 @@ function handleTimeout() {
   
   submitBtn.style.display = "none";
   nextBtn.style.display = "flex";
-  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить квиз" : "➡ Перейти к следующему вопросу";
+  nextBtn.textContent = (currentQuestionIndex + 1 === currentQuizQuestions.length) ? "Завершить" : "➡ Перейти к следующему вопросу";
   clearAuto();
   autoTransitionTimeout = setTimeout(() => goToNext(), 60000);
 }

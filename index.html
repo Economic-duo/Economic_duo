@@ -4489,7 +4489,7 @@
     }
 
     function formatFeedbackMsg(isCorrect, explanation) {
-      let msg = isCorrect ? "✅ Верно!" : "❌ Неверно.";
+      let msg = isCorrect ? "Верно!" : "Неверно.";
       if (explanation && explanation.trim()) msg += "<br>Примечание: " + escapeHtml(explanation);
       return msg;
     }

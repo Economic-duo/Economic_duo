@@ -228,12 +228,13 @@
       margin: 0;
     }
     .app-subtitle {
-      font-family: var(--font-family);
-      font-size: 14px;
-      font-weight: 500;
-      color: #9aa0f8;
-      margin-top: 8px;
-    }
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    color: #9aa0f8;
+    margin-top: 8px;
+    display: none;
+	}
 
     .page-heading {
       font-family: var(--font-family);
@@ -4428,6 +4429,7 @@
       resultsScreen.style.display = "none";
       historyScreen.style.display = "none";
       if (innerScreen) innerScreen.style.display = "block";
+	  document.getElementById("appUserGreeting").style.display = (innerScreen === startScreen) ? "block" : "none";
     }
 
   async function registerUser() {
@@ -4858,6 +4860,7 @@ async function loadResultsExtras(theme) {
 
       startScreen.style.display = "none";
       quizScreen.style.display = "block";
+	  document.getElementById("appUserGreeting").style.display = "none";
       resultsScreen.style.display = "none";
       historyScreen.style.display = "none";
       appScreens.style.display = "flex";
@@ -4873,6 +4876,7 @@ async function loadResultsExtras(theme) {
 
       startScreen.style.display = "block";
       quizScreen.style.display = "none";
+	  document.getElementById("appUserGreeting").style.display = "block";
       resultsScreen.style.display = "none";
       historyScreen.style.display = "none";
       appScreens.style.display = "flex";

@@ -739,6 +739,7 @@
 .history-item {
   width:100%;
   min-height:62px;
+  height:auto;
   background:#ffffff80;
   border:2px solid #a1a6ff;
   border-radius:18px;
@@ -750,7 +751,7 @@
 }
 
 .history-percent {
-  width:110px;
+  width:85px;
   font-size:32px;
   font-weight:700;
   color:#999cf4;
@@ -759,6 +760,7 @@
 
 .history-content {
   flex:1;
+  min-width:0;
 }
 
 .history-title {
@@ -767,10 +769,7 @@
   color:#17256b;
   line-height:1.2;
   margin-bottom:6px;
-  overflow:hidden;
-  display:-webkit-box;
-  -webkit-line-clamp:1;
-  -webkit-box-orient:vertical;
+  overflow-wrap:break-word;
 }
 
 .history-bottom {

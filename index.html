@@ -4935,21 +4935,44 @@ async function loadResultsExtras(theme) {
   const speed = totalQuestions > 0 ? Math.round(totalTimeSec / totalQuestions) : 0;
 
   const topicStats = {};
-  TOPIC_LIST.forEach(t => { topicStats[t] = { correct: 0, total: 0 }; });
-  history.forEach(h => {
-    if (topicStats.hasOwnProperty(h.theme)) {
-      topicStats[h.theme].correct += Number(h.correctCount) || 0;
-      topicStats[h.theme].total += Number(h.questionsCount) || 0;
+TOPIC_LIST.forEach(topic => {
+  const topicQuestions = questionsBank.filter(q => q.topic === topic);
+  topicStats[topic] = {
+    totalQuestions: new Set(topicQuestions.map(q => `${topic}_${q.id}`)),
+    solvedQuestions: new Set()
+  };
+});
+
+history.forEach(h => {
+  if (!topicStats[h.theme]) return;
+
+  let answers = [];
+  try {
+    answers = JSON.parse(h.answersJson || "[]");
+  } catch(e) {
+    answers = [];
+  }
+
+  answers.forEach(answer => {
+    if (answer.isCorrect === true) {
+      topicStats[h.theme].solvedQuestions.add(`${h.theme}_${answer.questionId}`);
     }
   });
+});
 
-  const topicsStudiedCount = TOPIC_LIST.filter(t => topicStats[t].total > 0).length;
+const topicsStudiedCount = TOPIC_LIST.filter(topic => {
+  const stat = topicStats[topic];
+  return stat.totalQuestions.size > 0 && stat.solvedQuestions.size === stat.totalQuestions.size;
+}).length;
 
-  const topicPercents = TOPIC_LIST.map(t => {
-    const stat = topicStats[t];
-    const percent = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
-    return { topic: t, percent, hasData: stat.total > 0 };
-  });
+const topicPercents = TOPIC_LIST.map(topic => {
+  const stat = topicStats[topic];
+  const total = stat.totalQuestions.size;
+  const solved = stat.solvedQuestions.size;
+  const percent = total > 0 ? Math.round((solved / total) * 100) : 0;
+
+  return { topic, percent, hasData: total > 0 };
+});
 
   return {
     totalCorrect,

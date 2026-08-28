@@ -771,10 +771,78 @@
   border-left: 4px solid #28a745 !important;
 }
 /* Подсветка выбранного пользователем неправильного ответа */
+	  
 .option-item.wrong-highlight {
   background-color: #f8d7da !important;
   border-left: 4px solid #dc3545 !important;
 }   
+.history-item {
+  width:100%;
+  min-height:150px;
+  background:#ffffff80;
+  border:2px solid #a1a6ff;
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  padding:24px 28px;
+  box-sizing:border-box;
+  margin-bottom:16px;
+}
+
+.history-percent {
+  width:120px;
+  font-size:54px;
+  font-weight:700;
+  color:#999cf4;
+}
+
+.history-content {
+  flex:1;
+}
+
+.history-top {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:10px;
+}
+
+.history-icon {
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#eef0ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#8f94ee;
+}
+
+.history-time {
+  font-size:20px;
+  font-weight:600;
+  color:#17256b;
+}
+
+.history-topic {
+  font-size:22px;
+  font-weight:700;
+  color:#17256b;
+  margin-bottom:14px;
+}
+
+.history-bottom {
+  display:flex;
+  gap:8px;
+  font-size:18px;
+  color:#17256b;
+}
+
+.history-arrow {
+  font-size:48px;
+  color:#858be8;
+}
+	  
   </style>
 </head>
 <body>
@@ -5220,30 +5288,30 @@ function renderHistoryOverview(history) {
     return;
   }
 
-  const grouped = {};
+  historyList.innerHTML = items.map(item => `
+    <div class="history-item">
+      <div class="history-percent">${item.percent}%</div>
 
-  items.forEach(item => {
-    const date = formatHistoryDate(item.date);
-    if (!grouped[date]) grouped[date] = [];
-    grouped[date].push(item);
-  });
-
-  historyList.innerHTML = Object.entries(grouped).map(([date, items]) => `
-    <div class="history-date">${escapeHtml(date)}</div>
-    ${items.map(item => `
-      <div class="history-item">
-        <div class="history-percent">${item.percent}%</div>
-        <div class="history-divider"></div>
-        <div class="history-icon">${getTopicIcon(item.theme)}</div>
-        <div class="history-info">
-          <div class="history-title">${formatHistoryTime(item.date)} <span>·</span> ${escapeHtml(item.theme)}</div>
-          <div class="history-meta">${escapeHtml(item.difficulty)} <span>·</span> ${formatSeconds(item.timeSec)}</div>
+      <div class="history-content">
+        <div class="history-top">
+          <div class="history-icon">${getTopicIcon(item.theme)}</div>
+          <div class="history-time">${formatHistoryTime(item.date)}</div>
         </div>
-        <div class="history-arrow">›</div>
+
+        <div class="history-topic">${escapeHtml(item.theme)}</div>
+
+        <div class="history-bottom">
+          <span>${escapeHtml(item.difficulty)}</span>
+          <span>·</span>
+          <span>${formatSeconds(item.timeSec)}</span>
+        </div>
       </div>
-    `).join("")}
+
+      <div class="history-arrow">›</div>
+    </div>
   `).join("");
 }
+	  
 	  
 function formatHistoryTime(date) {
   const d = new Date(date);

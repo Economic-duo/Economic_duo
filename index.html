@@ -529,10 +529,10 @@
     }
 
 .history-date {
-  font-size:32px;
+  font-size:22px;
   font-weight:700;
   color:#17256b;
-  margin:36px 0 18px;
+  margin:28px 0 14px;
 }
 
 .history-divider {
@@ -662,12 +662,10 @@
   text-align: right;
 }
 .history-list-title {
-  font-weight: 700;
-  font-size: 18px;
-  color: #191f69;
-  margin: 4px 0 12px;
-  padding-left: 10px;
-  border-left: 3px solid #9aa0f8;
+  font-size:22px;
+  font-weight:700;
+  color:#17256b;
+  margin-bottom:28px;
 }
 
     @media (max-width: 650px) {
@@ -769,9 +767,10 @@
   color:#17256b;
   line-height:1.2;
   margin-bottom:6px;
-  white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
 }
 
 .history-bottom {

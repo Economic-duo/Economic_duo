@@ -517,7 +517,7 @@
       margin-top: 8px;
     }
 
-    .history-card {
+    style {
       background: rgba(255, 255, 255, 0.85);
       border: 1px solid #99a0f9;
       border-radius: 10px;
@@ -527,6 +527,83 @@
       color: #191f69;
       font-size: 14px;
     }
+
+.history-date {
+  font-size:32px;
+  font-weight:700;
+  color:#17256b;
+  margin:36px 0 18px;
+}
+
+.history-item {
+  width:100%;
+  min-height:92px;
+  background:rgba(255,255,255,0.75);
+  border:2px solid #a1a6ff;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  padding:16px 24px;
+  box-sizing:border-box;
+  margin-bottom:12px;
+}
+
+.history-percent {
+  width:130px;
+  font-size:52px;
+  font-weight:700;
+  line-height:1;
+  color:#999cf4;
+  text-align:center;
+}
+
+.history-divider {
+  width:1px;
+  height:54px;
+  background:#d7dafc;
+  margin:0 28px;
+}
+
+.history-icon {
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:#eef0ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#8d92ed;
+  font-size:22px;
+  margin-right:26px;
+}
+
+.history-info {
+  flex:1;
+}
+
+.history-title {
+  font-size:22px;
+  font-weight:700;
+  color:#17256b;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.history-meta {
+  font-size:20px;
+  color:#17256b;
+  display:flex;
+  gap:10px;
+}
+
+.history-arrow {
+  font-size:42px;
+  color:#858be8;
+  font-weight:300;
+}
+
 	  
 	/* Overview stats block (History screen) */
 .history-overview {
@@ -5138,21 +5215,58 @@ function renderHistoryOverview(history) {
     }
 
     function renderHistory(items) {
-      if (!items.length) {
-        historyList.innerHTML = `<div class="history-card">У вас пока нет сохранённых результатов.</div>`;
-        return;
-      }
+  if (!items.length) {
+    historyList.innerHTML = `<div class="history-card">У вас пока нет сохранённых результатов.</div>`;
+    return;
+  }
 
-      historyList.innerHTML = items.map(item => `
-        <div class="history-card">
-          <div><strong>${escapeHtml(formatHistoryDate(item.date))}</strong></div>
-          <div>Тема: ${escapeHtml(String(item.theme))}</div>
-          <div>Уровень: ${escapeHtml(String(item.difficulty))}</div>
-          <div>Результат: <strong>${item.correctCount}/${item.questionsCount}</strong> (${item.percent}%)</div>
-          <div>Время: ${item.timeSec} сек</div>
+  const grouped = {};
+
+  items.forEach(item => {
+    const date = formatHistoryDate(item.date);
+    if (!grouped[date]) grouped[date] = [];
+    grouped[date].push(item);
+  });
+
+  historyList.innerHTML = Object.entries(grouped).map(([date, items]) => `
+    <div class="history-date">${escapeHtml(date)}</div>
+    ${items.map(item => `
+      <div class="history-item">
+        <div class="history-percent">${item.percent}%</div>
+        <div class="history-divider"></div>
+        <div class="history-icon">${getTopicIcon(item.theme)}</div>
+        <div class="history-info">
+          <div class="history-title">${formatHistoryTime(item.date)} <span>·</span> ${escapeHtml(item.theme)}</div>
+          <div class="history-meta">${escapeHtml(item.difficulty)} <span>·</span> ${formatSeconds(item.timeSec)}</div>
         </div>
-      `).join("");
-    }
+        <div class="history-arrow">›</div>
+      </div>
+    `).join("")}
+  `).join("");
+}
+	  
+function formatHistoryTime(date) {
+  const d = new Date(date);
+  return d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+}
+
+function formatSeconds(sec) {
+  sec = Number(sec) || 0;
+  if (sec >= 60) {
+    const min = Math.floor(sec / 60);
+    const seconds = sec % 60;
+    return `${min} мин ${seconds} сек`;
+  }
+  return `${sec} сек`;
+}
+
+function getTopicIcon(topic) {
+  if (topic.includes("Мониторинг")) return "▥";
+  if (topic.includes("инфля")) return "◉";
+  if (topic.includes("DSGE")) return "⌘";
+  if (topic.includes("Макропруден")) return "♢";
+  return "◌";
+}
 
     async function openHistory() {
       if (!currentUser) return;

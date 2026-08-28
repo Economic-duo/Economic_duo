@@ -535,28 +535,6 @@
   margin:36px 0 18px;
 }
 
-.history-item {
-  width:100%;
-  min-height:92px;
-  background:rgba(255,255,255,0.75);
-  border:2px solid #a1a6ff;
-  border-radius:22px;
-  display:flex;
-  align-items:center;
-  padding:16px 24px;
-  box-sizing:border-box;
-  margin-bottom:12px;
-}
-
-.history-percent {
-  width:130px;
-  font-size:52px;
-  font-weight:700;
-  line-height:1;
-  color:#999cf4;
-  text-align:center;
-}
-
 .history-divider {
   width:1px;
   height:54px;
@@ -581,29 +559,12 @@
   flex:1;
 }
 
-.history-title {
-  font-size:22px;
-  font-weight:700;
-  color:#17256b;
-  display:flex;
-  gap:10px;
-  align-items:center;
-  margin-bottom:8px;
-}
-
 .history-meta {
   font-size:20px;
   color:#17256b;
   display:flex;
   gap:10px;
 }
-
-.history-arrow {
-  font-size:42px;
-  color:#858be8;
-  font-weight:300;
-}
-
 	  
 	/* Overview stats block (History screen) */
 .history-overview {
@@ -779,20 +740,20 @@
 
 .history-item {
   width:100%;
-  min-height:72px;
+  min-height:62px;
   background:#ffffff80;
   border:2px solid #a1a6ff;
   border-radius:18px;
   display:flex;
   align-items:center;
-  padding:12px 18px;
+  padding:10px 18px;
   box-sizing:border-box;
   margin-bottom:8px;
 }
 
 .history-percent {
-  width:120px;
-  font-size:38px;
+  width:110px;
+  font-size:32px;
   font-weight:700;
   color:#999cf4;
   line-height:1;
@@ -803,11 +764,14 @@
 }
 
 .history-title {
-  font-size:17px;
+  font-size:16px;
   font-weight:700;
   color:#17256b;
   line-height:1.2;
   margin-bottom:6px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .history-bottom {
@@ -5293,7 +5257,6 @@ function renderHistoryOverview(history) {
           </div>
         </div>
 
-        <div class="history-arrow">›</div>
       </div>
     `).join("")}
   `).join("");

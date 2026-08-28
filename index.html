@@ -891,12 +891,12 @@
         </div>
 		  <div id="resultsExtraStats" class="extra-stats">
   <div class="extra-stat-card">
-    <div class="extra-stat-label">Streak</div>
-    <div class="extra-stat-value" id="streakValue">—</div>
-    <div class="extra-stat-suffix">дней</div>
-  </div>
+  <div class="extra-stat-label">Перцентиль по теме</div>
+  <div class="extra-stat-value" id="percentileValue">—</div>
+  <div class="extra-stat-suffix">%</div>
+</div>
   <div class="extra-stat-card">
-    <div class="extra-stat-label">Рекорд по теме</div>
+    <div class="extra-stat-label">Лучший результат по теме</div>
     <div class="extra-stat-value" id="topicRecordValue" style="padding-left: 8px;">—</div>
     <div class="extra-stat-suffix">&nbsp;</div>
   </div>
@@ -4994,13 +4994,20 @@ function renderSparkline(attempts) {
   svg.innerHTML = `<polyline points="${points.join(" ")}" fill="none" stroke="#9aa0f8" stroke-width="2.5" /> ${circles} ${labels}`;
 }
 
-async function loadResultsExtras(theme) {
-  document.getElementById("streakValue").textContent = "…";
+async function loadResultsExtras(theme, percent, difficulty) {
+  document.getElementById("percentileValue").textContent = "…";
   document.getElementById("topicRecordValue").textContent = "…";
-  const res = await callAppsScript("getUserHistory", { username: currentUser });
-  if (!res || !res.success) return;
-  const history = res.history || [];
-  document.getElementById("streakValue").textContent = String(calcStreak(history));
+  const res = await callAppsScript("getTopicPercentile", {
+    theme: theme,
+    percent: percent,
+    difficulty: difficulty
+  });
+  if (res && res.success) {
+    document.getElementById("percentileValue").textContent = String(res.percentile);
+  }
+  const historyRes = await callAppsScript("getUserHistory", { username: currentUser });
+  if (!historyRes || !historyRes.success) return;
+  const history = historyRes.history || [];
   const record = calcTopicRecord(history, theme);
   document.getElementById("topicRecordValue").textContent = record !== null ? `${record}%` : "—";
   renderSparkline(getLastAttemptsByTopic(history, theme, 5));
@@ -5132,7 +5139,7 @@ function renderHistoryOverview(history) {
       };
 
       saveResultAuto(finalData);
-	  loadResultsExtras(finalData.settings.theme);
+	  loadResultsExtras(finalData.settings.theme, percent, finalData.settings.difficulty);
     }
 
     function renderCurrentQuestion() {

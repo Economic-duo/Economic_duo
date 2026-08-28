@@ -527,6 +527,109 @@
       color: #191f69;
       font-size: 14px;
     }
+	  
+	/* Overview stats block (History screen) */
+.history-overview {
+  margin-bottom: 28px;
+}
+.overview-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.overview-stat-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #99a0f9;
+  border-radius: 16px;
+  padding: 20px 16px;
+  color: #191f69;
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+}
+.overview-stat-value {
+  font-size: 42px;
+  font-weight: 700;
+  color: #9aa0f8;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex: 1;
+}
+.overview-stat-value .overview-stat-suffix {
+  font-size: 20px;
+  font-weight: 700;
+  color: #9aa0f8;
+}
+.overview-stat-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #191f69;
+  margin-top: 10px;
+}
+.knowledge-map-block {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #99a0f9;
+  border-radius: 16px;
+  padding: 20px 16px;
+  margin-bottom: 24px;
+}
+.knowledge-map-title {
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 22px;
+  color: #9aa0f8;
+  margin-bottom: 4px;
+}
+.knowledge-map-subtitle {
+  font-size: 14px;
+  color: #191f69;
+  margin-bottom: 18px;
+}
+.knowledge-topic-row {
+  margin-bottom: 16px;
+}
+.knowledge-topic-row:last-child { margin-bottom: 0; }
+.knowledge-topic-name {
+  font-size: 14px;
+  color: #191f69;
+  margin-bottom: 8px;
+}
+.knowledge-topic-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.knowledge-topic-bar-track {
+  flex: 1;
+  height: 10px;
+  border-radius: 6px;
+  background: #c8ccf9;
+  overflow: hidden;
+}
+.knowledge-topic-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: #191f69;
+  transition: width 0.4s ease;
+}
+.knowledge-topic-percent {
+  font-size: 14px;
+  font-weight: 700;
+  color: #191f69;
+  min-width: 40px;
+  text-align: right;
+}
+.history-list-title {
+  font-weight: 700;
+  font-size: 18px;
+  color: #191f69;
+  margin: 4px 0 12px;
+  padding-left: 10px;
+  border-left: 3px solid #9aa0f8;
+}
 
     @media (max-width: 650px) {
       body { padding: 0; align-items: stretch; }
@@ -724,15 +827,53 @@
       </div>
 
       <div id="historyScreen" style="display:none;">
-        <h2 class="page-heading">История результатов</h2>
-        <div id="historyList" style="margin-top:14px;"></div>
-        <button class="btn btn-secondary" id="backToResultsBtn">Назад</button>
+  <h2 class="page-heading">История результатов</h2>
+
+  <div id="historyOverview" class="history-overview">
+    <div class="overview-stat-grid">
+      <div class="overview-stat-card">
+        <div class="overview-stat-value" id="ovTotalCorrect">0</div>
+        <div class="overview-stat-label">Верных ответов всего</div>
       </div>
+      <div class="overview-stat-card">
+        <div class="overview-stat-value" id="ovDaysSince">0</div>
+        <div class="overview-stat-label">Дней с первого квиза</div>
+      </div>
+      <div class="overview-stat-card">
+        <div class="overview-stat-value" id="ovTopicsStudied">0/0</div>
+        <div class="overview-stat-label">Тем изучено</div>
+      </div>
+      <div class="overview-stat-card">
+        <div class="overview-stat-value"><span id="ovSpeed">0</span><span class="overview-stat-suffix">сек/вопрос</span></div>
+        <div class="overview-stat-label">Скорость</div>
+      </div>
+    </div>
+
+    <div class="knowledge-map-block">
+      <div class="knowledge-map-title">Карта знаний</div>
+      <div class="knowledge-map-subtitle">Средний % верных по темам</div>
+      <div id="knowledgeMapList"></div>
+    </div>
+  </div>
+
+  <div class="history-list-title">Все попытки</div>
+  <div id="historyList" style="margin-top:14px;"></div>
+  <button class="btn btn-secondary" id="backToResultsBtn">Назад</button>
+</div>
     </div>
     </div>
   </div>
 
   <script>
+
+	  const TOPIC_LIST = [
+  "Операционные процедуры Банка России",
+  "Макропруденциальная политика Банка России",
+  "Переход к инфляционному таргетированию",
+  "Архитектура DSGE моделей",
+  "Мониторинг предприятий"
+];
+	  
     const questionsBank = [
   {
     "id": 1,
@@ -4777,6 +4918,73 @@ async function loadResultsExtras(theme) {
   document.getElementById("topicRecordValue").textContent = record !== null ? `${record}%` : "—";
   renderSparkline(getLastAttemptsByTopic(history, theme, 5));
 }
+	  function computeHistoryOverview(history) {
+  const totalCorrect = history.reduce((sum, h) => sum + (Number(h.correctCount) || 0), 0);
+  const totalQuestions = history.reduce((sum, h) => sum + (Number(h.questionsCount) || 0), 0);
+  const totalTimeSec = history.reduce((sum, h) => sum + (Number(h.timeSec) || 0), 0);
+
+  let daysSince = 0;
+  if (history.length) {
+    const dates = history.map(h => new Date(h.date).getTime()).filter(t => !isNaN(t));
+    if (dates.length) {
+      const earliest = Math.min(...dates);
+      daysSince = Math.max(0, Math.floor((Date.now() - earliest) / (1000 * 60 * 60 * 24)));
+    }
+  }
+
+  const speed = totalQuestions > 0 ? Math.round(totalTimeSec / totalQuestions) : 0;
+
+  const topicStats = {};
+  TOPIC_LIST.forEach(t => { topicStats[t] = { correct: 0, total: 0 }; });
+  history.forEach(h => {
+    if (topicStats.hasOwnProperty(h.theme)) {
+      topicStats[h.theme].correct += Number(h.correctCount) || 0;
+      topicStats[h.theme].total += Number(h.questionsCount) || 0;
+    }
+  });
+
+  const topicsStudiedCount = TOPIC_LIST.filter(t => topicStats[t].total > 0).length;
+
+  const topicPercents = TOPIC_LIST.map(t => {
+    const stat = topicStats[t];
+    const percent = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
+    return { topic: t, percent, hasData: stat.total > 0 };
+  });
+
+  return {
+    totalCorrect,
+    daysSince,
+    topicsStudiedCount,
+    totalTopics: TOPIC_LIST.length,
+    speed,
+    topicPercents
+  };
+}
+
+function renderKnowledgeMap(topicPercents) {
+  const list = document.getElementById("knowledgeMapList");
+  list.innerHTML = topicPercents.map(item => `
+    <div class="knowledge-topic-row">
+      <div class="knowledge-topic-name">${escapeHtml(item.topic)}</div>
+      <div class="knowledge-topic-bar-wrap">
+        <div class="knowledge-topic-bar-track">
+          <div class="knowledge-topic-bar-fill" style="width:${item.percent}%;"></div>
+        </div>
+        <div class="knowledge-topic-percent">${item.hasData ? item.percent + "%" : "—"}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderHistoryOverview(history) {
+  const stats = computeHistoryOverview(history);
+  document.getElementById("ovTotalCorrect").textContent = String(stats.totalCorrect);
+  document.getElementById("ovDaysSince").textContent = String(stats.daysSince);
+  document.getElementById("ovTopicsStudied").textContent = `${stats.topicsStudiedCount}/${stats.totalTopics}`;
+  document.getElementById("ovSpeed").textContent = String(stats.speed);
+  renderKnowledgeMap(stats.topicPercents);
+}
+	  
     function finishQuiz() {
 		
       stopTimer();
@@ -4927,6 +5135,8 @@ async function loadResultsExtras(theme) {
 
       const res = await callAppsScript("getUserHistory", { username: currentUser });
       if (res && res.success) {
+		const history = res.history || [];
+    	renderHistoryOverview(history);
         renderHistory(res.history || []);
         showAppScreen(historyScreen);
       } else {

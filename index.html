@@ -891,9 +891,9 @@
         </div>
 		  <div id="resultsExtraStats" class="extra-stats">
   <div class="extra-stat-card">
-  <div class="extra-stat-label">Перцентиль по теме</div>
+  <div class="extra-stat-label">Место в рейтинге по теме</div>
   <div class="extra-stat-value" id="percentileValue">—</div>
-  <div class="extra-stat-suffix">%</div>
+  <div class="extra-stat-suffix">&nbsp;</div>
 </div>
   <div class="extra-stat-card">
     <div class="extra-stat-label">Лучший результат по теме</div>
@@ -5003,7 +5003,7 @@ async function loadResultsExtras(theme, percent, difficulty) {
     difficulty: difficulty
   });
   if (res && res.success) {
-    document.getElementById("percentileValue").textContent = String(res.percentile);
+    document.getElementById("percentileValue").textContent = res.total > 0 ? `${res.rank}/${res.total}` : "—";
   }
   const historyRes = await callAppsScript("getUserHistory", { username: currentUser });
   if (!historyRes || !historyRes.success) return;
@@ -5021,8 +5021,13 @@ async function loadResultsExtras(theme, percent, difficulty) {
   if (history.length) {
     const dates = history.map(h => new Date(h.date).getTime()).filter(t => !isNaN(t));
     if (dates.length) {
-      const earliest = Math.min(...dates);
-      daysSince = Math.max(0, Math.floor((Date.now() - earliest) / (1000 * 60 * 60 * 24)));
+		const earliest = new Date(Math.min(...dates));
+		earliest.setHours(0, 0, 0, 0);
+		
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		
+		daysSince = Math.floor((today - earliest) / (1000 * 60 * 60 * 24)) + 1;
     }
   }
 
@@ -5102,7 +5107,7 @@ function renderHistoryOverview(history) {
   renderKnowledgeMap(stats.topicPercents);
 }
 	  
-    function finishQuiz() {
+    async function finishQuiz() {
 		
       stopTimer();
       clearAuto();
@@ -5138,7 +5143,7 @@ function renderHistoryOverview(history) {
         answers: userAnswersRecord
       };
 
-      saveResultAuto(finalData);
+      await saveResultAuto(finalData);
 	  loadResultsExtras(finalData.settings.theme, percent, finalData.settings.difficulty);
     }
 

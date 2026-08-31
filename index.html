@@ -4965,10 +4965,35 @@ function handleTimeout() {
   return streak;
 }
 
+function calculateScore(percent, questionsCount) {
+  const maxQuestionsCount = 15;
+  return Number(percent) * (Number(questionsCount) / maxQuestionsCount);
+}
+
+
 function calcTopicRecord(history, theme) {
   const topicHistory = history.filter(h => h.theme === theme);
+
   if (!topicHistory.length) return null;
-  return Math.max(...topicHistory.map(h => h.percent));
+
+  const bestAttempt = topicHistory.reduce((best, current) => {
+
+    const bestScore = calculateScore(
+      best.percent,
+      best.questionsCount
+    );
+
+    const currentScore = calculateScore(
+      current.percent,
+      current.questionsCount
+    );
+
+    return currentScore > bestScore ? current : best;
+
+  });
+
+
+  return bestAttempt.percent;
 }
 
 function getLastAttemptsByTopic(history, theme, count) {
@@ -5005,7 +5030,8 @@ async function loadResultsExtras(theme, percent, difficulty) {
   document.getElementById("topicRecordValue").textContent = "…";
   const res = await callAppsScript("getTopicPercentile", {
     theme: theme,
-    percent: percent
+    percent: percent,
+	questionsCount: currentQuizQuestions.length
   });
   if (res && res.success) {
     document.getElementById("percentileValue").textContent = res.total > 0 ? `${res.rank}/${res.total}` : "—";

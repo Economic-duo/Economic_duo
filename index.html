@@ -5126,8 +5126,10 @@ function renderHistoryOverview(history) {
       totalQuestionsStatSpan.textContent = String(totalQ);
       percentageStatSpan.textContent = `${percent}%`;
       totalTimeSecSpan.textContent = String(totalSeconds);
-	  document.getElementById("resultTopicName").innerHTML = `<strong>Тема:</strong> ${document.querySelector('input[name="theme"]:checked').value === "mix" ? "Микс тем" : document.querySelector('input[name="theme"]:checked').value}`;
-      quizScreen.style.display = "none";
+	  const themeChecked = document.querySelector('input[name="theme"]:checked').value;
+	  const themeDisplayResult = themeChecked === "mix" ? "Микс тем" : themeChecked;
+	  const difficultyChecked = document.querySelector('input[name="difficulty"]:checked').value;
+	  document.getElementById("resultTopicName").innerHTML = `<strong>${escapeHtml(themeDisplayResult)} · ${escapeHtml(difficultyChecked)}</strong>`;      quizScreen.style.display = "none";
       resultsScreen.style.display = "block";
       historyScreen.style.display = "none";
       appScreens.style.display = "flex";

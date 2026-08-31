@@ -5031,7 +5031,8 @@ async function loadResultsExtras(theme, percent, difficulty) {
   const res = await callAppsScript("getTopicPercentile", {
     theme: theme,
     percent: percent,
-	questionsCount: currentQuizQuestions.length
+	questionsCount: currentQuizQuestions.length,
+	username: currentUser
   });
   if (res && res.success) {
     document.getElementById("percentileValue").textContent = res.total > 0 ? `${res.rank}/${res.total}` : "—";

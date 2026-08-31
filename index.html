@@ -5005,8 +5005,7 @@ async function loadResultsExtras(theme, percent, difficulty) {
   document.getElementById("topicRecordValue").textContent = "…";
   const res = await callAppsScript("getTopicPercentile", {
     theme: theme,
-    percent: percent,
-    difficulty: difficulty
+    percent: percent
   });
   if (res && res.success) {
     document.getElementById("percentileValue").textContent = res.total > 0 ? `${res.rank}/${res.total}` : "—";

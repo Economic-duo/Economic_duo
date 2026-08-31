@@ -878,7 +878,7 @@
       </div>
 
       <div id="quizScreen" style="display:none;">
-		 <p class="results-topic" id="quizTopicInfo"></p>
+		    <p class="results-topic" id="quizTopicInfo"></p>
         <div class="quiz-header">
           <span class="question-counter" id="questionCounter">Вопрос 1 / 10</span>
           <span class="timer" id="timerDisplay">01:00</span>
@@ -5207,6 +5207,9 @@ function renderHistoryOverview(history) {
       if (!build.success) return showError(startErrorMsg, build.msg);
 
       hideMsg(startErrorMsg);
+	  const themeDisplay = theme === "mix" ? "Микс тем" : theme;
+	  document.getElementById("quizTopicInfo").innerHTML = `<strong>${escapeHtml(themeDisplay)}</strong> · ${escapeHtml(difficulty)}`;
+
       currentQuizQuestions = build.questions;
       userAnswersRecord = [];
       currentQuestionIndex = 0;

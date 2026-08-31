@@ -777,6 +777,10 @@
 	color:#51657a;
 }
 
+.difficulty-label {
+  text-transform: capitalize;
+}
+
 .history-arrow {
   font-size:32px;
   color:#858be8;
@@ -5263,7 +5267,7 @@ function renderHistoryOverview(history) {
           </div>
 
           <div class="history-bottom">
-            ${escapeHtml(item.difficulty)} · ${formatSeconds(item.timeSec)}
+            <span class="difficulty-label">${escapeHtml(item.difficulty)}</span> · ${formatSeconds(item.timeSec)}
           </div>
         </div>
 

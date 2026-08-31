@@ -5208,7 +5208,7 @@ function renderHistoryOverview(history) {
 
       hideMsg(startErrorMsg);
 	  const themeDisplay = theme === "mix" ? "Микс тем" : theme;
-	  document.getElementById("quizTopicInfo").innerHTML = `<strong>${escapeHtml(themeDisplay)}</strong> · ${escapeHtml(difficulty)}`;
+	  document.getElementById("quizTopicInfo").innerHTML = `<strong>${escapeHtml(themeDisplay)} · ${escapeHtml(difficulty)}</strong>`;
 
       currentQuizQuestions = build.questions;
       userAnswersRecord = [];

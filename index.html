@@ -529,7 +529,7 @@
     }
 
 .history-date {
-  font-size:14px;
+  font-size:16px;
   font-weight:700;
   color:#191f69;
   margin:24px 0 10px;
@@ -5250,8 +5250,8 @@ function renderHistoryOverview(history) {
 
   items.forEach(item => {
     const date = new Date(item.date);
-    const key = `${date.getDate()} ${date.toLocaleString("ru-RU",{month:"long"})}`;
-
+	const key = formatHistoryDateKey(date);
+	  
     if (!grouped[key]) grouped[key] = [];
     grouped[key].push(item);
   });
@@ -5282,6 +5282,15 @@ function renderHistoryOverview(history) {
 function formatHistoryTime(date) {
   const d = new Date(date);
   return d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+}
+
+const MONTHS_GENITIVE = [
+  "января", "февраля", "марта", "апреля", "мая", "июня",
+  "июля", "августа", "сентября", "октября", "ноября", "декабря"
+];
+
+function formatHistoryDateKey(date) {
+  return `${date.getDate()} ${MONTHS_GENITIVE[date.getMonth()]}`;
 }
 
 function formatSeconds(sec) {

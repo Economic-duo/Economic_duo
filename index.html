@@ -4980,21 +4980,12 @@ function calculateScore(percent, questionsCount, difficulty) {
 
 function calcTopicRecord(history, theme) {
   const topicHistory = history.filter(h => h.theme === theme);
-
   if (!topicHistory.length) return null;
-
+	
   const bestAttempt = topicHistory.reduce((best, current) => {
 
-    const bestScore = calculateScore(
-      best.percent,
-      best.questionsCount
-    );
-
-    const currentScore = calculateScore(
-      current.percent,
-      current.questionsCount
-    );
-
+    const bestScore = calculateScore(best.percent, best.questionsCount, best.difficulty);
+    const currentScore = calculateScore(current.percent, current.questionsCount, current.difficulty);
     return currentScore > bestScore ? current : best;
 
   });
@@ -5039,6 +5030,7 @@ async function loadResultsExtras(theme, percent, difficulty) {
     theme: theme,
     percent: percent,
 	questionsCount: currentQuizQuestions.length,
+	difficulty: difficulty,
 	username: currentUser
   });
   if (res && res.success) {

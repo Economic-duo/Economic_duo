@@ -4965,9 +4965,16 @@ function handleTimeout() {
   return streak;
 }
 
-function calculateScore(percent, questionsCount) {
+const DIFFICULTY_WEIGHTS = {
+  "базовый": 1.0,
+  "продвинутый": 1.25,
+  "сложный": 1.5
+};
+
+function calculateScore(percent, questionsCount, difficulty) {
   const maxQuestionsCount = 15;
-  return Number(percent) * (Number(questionsCount) / maxQuestionsCount);
+  const weight = DIFFICULTY_WEIGHTS[difficulty] || 1.0;
+  return Number(percent) * (Number(questionsCount) / maxQuestionsCount) * weight;
 }
 
 
